@@ -1256,7 +1256,7 @@ function renderCards(list) {
     // real photo from picsum.photos
     const recipeImg = document.createElement('img');
     recipeImg.className = 'recipe-img';
-    recipeImg.src = `https://picsum.photos/id/${(idx % 100) + 1}/800/800`;
+    recipeImg.src = `https://picsum.photos/id/${(idx % 30) + 10}/800/800`;
     recipeImg.alt = r.title;
     recipeImg.loading = 'lazy';
     const overlay = document.createElement('div');
