@@ -335,25 +335,35 @@
     align-items: center;
     justify-content: center;
   }
-  .card-img .gradient-bg {
+  .card-img .recipe-img {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     transition: transform .5s cubic-bezier(0.22,1,0.36,1), filter .5s ease;
   }
-  .card-img .gradient-bg::after {
-    content: '';
+  .card-img .recipe-img + .img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.15) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .card-img .recipe-img + .img-overlay + .film-grain {
     position: absolute;
     inset: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.06'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-size: 128px;
-    opacity: 0.5;
+    opacity: 0.35;
     pointer-events: none;
     mix-blend-mode: overlay;
+    z-index: 1;
   }
-  .card:hover .gradient-bg {
+  .card:hover .recipe-img {
     transform: scale(1.04);
-    filter: brightness(1.08) saturate(1.02);
+    filter: brightness(1.05);
   }
   .card-img .film-badge {
     position: absolute;
@@ -1243,14 +1253,21 @@ function renderCards(list) {
     copyBadge.className = 'copy-badge';
     copyBadge.textContent = '⏎ 点击复制';
 
-    // gradient background from palette
-    const gradBg = document.createElement('div');
-    gradBg.className = 'gradient-bg';
-    const pal = r.palette;
-    gradBg.style.background = `linear-gradient(145deg, ${pal[0]} 0%, ${pal[2]} 50%, ${pal[3]} 100%)`;
+    // real photo from picsum.photos
+    const recipeImg = document.createElement('img');
+    recipeImg.className = 'recipe-img';
+    recipeImg.src = `https://picsum.photos/seed/${r.id}/400/400`;
+    recipeImg.alt = r.title;
+    recipeImg.loading = 'lazy';
+    const overlay = document.createElement('div');
+    overlay.className = 'img-overlay';
+    const grain = document.createElement('div');
+    grain.className = 'film-grain';
+    imgDiv.appendChild(recipeImg);
+    imgDiv.appendChild(overlay);
+    imgDiv.appendChild(grain);
     imgDiv.appendChild(badge);
     imgDiv.appendChild(copyBadge);
-    imgDiv.appendChild(gradBg);
 
     // right body
     const body = document.createElement('div');
