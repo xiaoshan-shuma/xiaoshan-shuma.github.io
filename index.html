@@ -338,6 +338,10 @@
     align-items: center;
     justify-content: center;
   }
+  .gradient-bg {
+    position: absolute;
+    inset: 0;
+  }
   .card-img .recipe-img {
     position: absolute;
     inset: 0;
@@ -1259,9 +1263,19 @@ function renderCards(list) {
     // real photo from picsum.photos
     const recipeImg = document.createElement('img');
     recipeImg.className = 'recipe-img';
-    recipeImg.src = `https://picsum.photos/id/${(idx % 30) + 10}/800/800`;
+    // Curated high-quality photos (landscape, nature, people - NO tech/fashion/heels)
+    const goodIds = [10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,28,30,31,33,34,36,37,39,40,44,46,47,48];
+    recipeImg.src = `https://picsum.photos/id/${goodIds[idx % goodIds.length]}/800/800`;
     recipeImg.alt = r.title;
     recipeImg.loading = 'lazy';
+    recipeImg.onerror = function() {
+      this.style.display = 'none';
+      const fallback = document.createElement('div');
+      fallback.className = 'gradient-bg';
+      const pal = r.palette;
+      fallback.style.background = 'linear-gradient(145deg,' + pal[0] + ',' + pal[2] + ',' + pal[3] + ')';
+      this.parentNode.insertBefore(fallback, this.nextSibling);
+    };
     const overlay = document.createElement('div');
     overlay.className = 'img-overlay';
     const grain = document.createElement('div');
